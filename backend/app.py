@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -21,6 +22,11 @@ KNOWN_HASHES = load_hashes()
 print(f"Wczytano {len(KNOWN_HASHES)} hashy z {HASHES_FILE}", flush=True)
 
 
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+
 @app.post("/check")
 def check():
     data = request.get_json(silent=True) or {}
@@ -33,10 +39,7 @@ def check():
 
     print(f"check: hash={h[:5]}", flush=True)
 
-    
-    # TODO 1: sprawdź, czy h należy do zbioru KNOWN_HASHES (wynik zapisz w zmiennej found)
     found = h in KNOWN_HASHES
-    # TODO 2: zwróć JSON {"found": found}
     return jsonify({"found": found})
 
 
